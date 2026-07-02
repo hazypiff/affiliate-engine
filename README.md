@@ -65,6 +65,27 @@ dataset adapter ─────────────────────�
 - `sql/` — 16-table schema, `tenant_id` on every table (multi-tenant-ready), NUMERIC
   money end-to-end, pgvector for page embeddings.
 
+## Recommended local model
+
+The engine's `draft`/`extract` roles are built and tested against
+**[hazypiff/LFM2.5-8B-A1B-fastagent-stage2](https://huggingface.co/hazypiff/LFM2.5-8B-A1B-fastagent-stage2)** —
+an agentic/tool-calling fine-tune of LFM2.5-8B-A1B (MoE, ~1B active params, fast on
+CPU) made for this system. GGUF quants ship in the repo:
+
+```bash
+# download (Q4_K_M for CPU boxes; Q5_K_M if you have headroom)
+huggingface-cli download hazypiff/LFM2.5-8B-A1B-fastagent-stage2 lfm-stage2-Q4_K_M.gguf --local-dir models/
+
+# serve it where the engine expects it (LLM_BASE in .env)
+llama-server -m models/lfm-stage2-Q4_K_M.gguf --port 18080 -c 8192
+
+# embeddings for the uniqueness gate (EMBED_BASE): any 768-dim embedding server works;
+# tested with embeddinggemma-300m via llama.cpp --embedding
+```
+
+Any OpenAI-compatible endpoint works instead (Ollama, vLLM, cloud APIs) — models are
+config rows, not code. Use a stronger cloud model for the `polish` role on money pages.
+
 ## Quickstart
 
 ```bash
