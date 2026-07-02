@@ -64,7 +64,32 @@ def main():
     again = json.loads(run([ENGINE, "find-opportunities", "ai-saas"]))
     assert again["new_opportunities"] == 0
 
-    print("[5/5] growth run rows recorded")
+    print("[5/6] link building: assets -> prospects -> drafts -> snapshot")
+    assets = json.loads(run([ENGINE, "build-assets", "ai-saas", "--with-study",
+                             "--provider", "mock"]))
+    assert assets["study"]["status"] == "published", assets
+    widget_file = ROOT / "site" / "public" / "widgets" / "ai-saas-stats.html"
+    assert widget_file.exists() and "aitoolfacts" in widget_file.read_text()
+
+    pcsv = ROOT / "site" / "content" / "_e2e_prospects.csv"
+    pcsv.write_text("domain,url,contact,reason\n"
+                    "blog-a.example,,ed@blog-a.example,ranks email tools\n"
+                    "blog-b.example,,,covers saas pricing\n")
+    assert json.loads(run([ENGINE, "import-prospects", "ai-saas", str(pcsv)]))[
+        "prospects_added"] == 2
+    drafted = json.loads(run([ENGINE, "draft-outreach", "ai-saas", "--provider", "mock"]))
+    assert drafted["drafted"] == 2, drafted
+    queue = [json.loads(line) for line in run([ENGINE, "outreach-queue", "ai-saas"]).splitlines()]
+    assert len(queue) == 2 and "ranks email tools" in queue[0]["body"]
+    assert json.loads(run([ENGINE, "mark-outreach", "ai-saas", "blog-a.example",
+                           "--status", "sent"]))["updated"]
+    bcsv = ROOT / "site" / "content" / "_e2e_backlinks.csv"
+    bcsv.write_text("Site,Linking pages,Target pages\nref-a.example,10,2\nref-b.example,3,1\n")
+    snap = json.loads(run([ENGINE, "import-backlinks", "ai-saas", str(bcsv),
+                           "--date", "2026-01-25"]))
+    assert snap["referring_domains"] == 2 and snap["total_links"] == 13
+
+    print("[6/6] growth run rows recorded")
     out = subprocess.run(
         ["docker", "exec", "nj-pg", "psql", "-U", "njbot", "-d", "affiliate_engine_test",
          "-tAc", "SELECT count(*) FROM daily_growth_runs"],

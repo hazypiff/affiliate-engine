@@ -43,6 +43,11 @@ def daily_growth(pack_slug: str, tenant_id: int = 1, provider_override: str | No
 
     report["links"] = build_links(pack_slug, tenant_id)
 
+    from engine.growth.assets import build_widget
+
+    # widget refreshes daily so embeds always show live data (the reason to embed ours)
+    report["assets"] = build_widget(pack_slug, tenant_id)
+
     if not skip_publish:
         import subprocess
         from pathlib import Path

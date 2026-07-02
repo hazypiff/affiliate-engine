@@ -117,6 +117,27 @@ volume/difficulty fill until Google Ads/DataForSEO connectors are wired),
 `plan-content`, `generate-briefs`, `build-links`, `publish-index`, `import-gsc`
 (needs `GSC_SA_JSON` service-account; CSV importer works without), `find-opportunities`.
 
+## Link building (earn links, never place them)
+
+Automated link *placement* (auto-posting, PBNs, mass outreach) is Google's link-spam
+policy by definition and is deliberately NOT built. What is built:
+
+```bash
+engine build-assets ai-saas --with-study   # linkable assets:
+#   - embeddable live stats widget (site/public/widgets/, attribution link in the
+#     embed snippet; refreshed by daily-growth so embeds always show current data)
+#   - data-study page compiled from dataset aggregates + gated LLM narrative
+engine import-prospects ai-saas prospects.csv   # domain[,url,contact,reason]
+engine draft-outreach ai-saas                   # LLM-drafted pitches referencing a real asset
+engine outreach-queue ai-saas                   # review drafts — SENDING IS ALWAYS HUMAN
+engine mark-outreach ai-saas blog.example --status sent|linked|rejected
+engine import-backlinks ai-saas gsc_links.csv --date 2026-07-02   # referring-domain snapshots
+```
+
+Prospect discovery via competitor backlink gap (DataForSEO/Ahrefs) is a provider stub
+in `engine/growth/outreach.py` — wire credentials to auto-fill the prospect queue from
+each pack's `competitors:` list.
+
 Traffic design notes from the research: sitemaps are the correct indexing channel —
 Google's Indexing API only covers job postings/livestreams and is deliberately not
 used; internal links are emitted as crawlable `<a>` in the static HTML; keyword ideas

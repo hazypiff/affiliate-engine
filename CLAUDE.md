@@ -97,6 +97,12 @@ sitemap/GSC → metrics → scorer → rules. Its invariants:
   guarded (skip cleanly without creds, record status in indexing_submissions).
 - Growth e2e is `tests/e2e/growth.py` (runs in `make e2e`): asserts every stage
   produced work, second run is incremental, and crafted metrics fire the rules.
+- LINK BUILDING (engine/growth/{assets,outreach}.py): the system EARNS links via
+  assets (embeddable widget with attribution, gated data-study pages) and prepares
+  outreach (prospect queue + LLM drafts). NEVER implement automated link placement,
+  auto-posting, or auto-sending of outreach — that is Google link-spam policy;
+  sending is a human action recorded via `engine mark-outreach`. The widget must
+  stay self-contained (no external resources) and keep its attribution link.
 
 ## v2 roadmap (documented, unbuilt — pick up here)
 

@@ -128,6 +128,63 @@ def find_opportunities_cmd(pack: str):
     typer.echo(json.dumps(find_opportunities(pack), indent=1))
 
 
+@app.command("build-assets")
+def build_assets_cmd(pack: str, with_study: bool = typer.Option(False),
+                     provider: str = typer.Option(None)):
+    """Build linkable assets: the embeddable stats widget (+ data study with --with-study)."""
+    from engine.growth.assets import build_study, build_widget
+
+    out = {"widget": build_widget(pack)}
+    if with_study:
+        out["study"] = build_study(pack, provider_override=provider)
+    typer.echo(json.dumps(out))
+
+
+@app.command("import-prospects")
+def import_prospects_cmd(pack: str, file: str):
+    """Import outreach prospects from CSV (domain[,url,contact,reason])."""
+    from engine.growth.outreach import import_prospects
+
+    typer.echo(json.dumps(import_prospects(pack, file)))
+
+
+@app.command("draft-outreach")
+def draft_outreach_cmd(pack: str, limit: int = typer.Option(10),
+                       provider: str = typer.Option(None)):
+    """Draft outreach emails for new prospects. Sending is YOURS — review with outreach-queue."""
+    from engine.growth.outreach import draft_outreach
+
+    typer.echo(json.dumps(draft_outreach(pack, limit=limit, provider_override=provider)))
+
+
+@app.command("outreach-queue")
+def outreach_queue_cmd(pack: str):
+    """Show drafted outreach emails awaiting a human send."""
+    from engine.growth.outreach import list_drafts
+
+    for d in list_drafts(pack):
+        typer.echo(json.dumps(d))
+
+
+@app.command("mark-outreach")
+def mark_outreach_cmd(pack: str, domain: str,
+                      status: str = typer.Option(..., help="sent | linked | rejected")):
+    """Record the human outcome of an outreach email."""
+    from engine.growth.outreach import set_status
+
+    typer.echo(json.dumps({"domain": domain, "status": status,
+                           "updated": set_status(pack, domain, status)}))
+
+
+@app.command("import-backlinks")
+def import_backlinks_cmd(pack: str, file: str, date: str = typer.Option(...),
+                         source: str = typer.Option("gsc_csv")):
+    """Snapshot referring domains from a CSV export (GSC Top linking sites etc.)."""
+    from engine.growth.outreach import import_backlinks
+
+    typer.echo(json.dumps(import_backlinks(pack, file, date, source)))
+
+
 @app.command("daily-growth")
 def daily_growth_cmd(pack: str, provider: str = typer.Option(None),
                      skip_publish: bool = typer.Option(False, help="skip next build")):
