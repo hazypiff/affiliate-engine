@@ -57,6 +57,21 @@ class ComplianceSpec(BaseModel):
     geo_default_deny: bool = False
 
 
+class TrafficSpec(BaseModel):
+    """Organic-growth config: drives keyword discovery, brief planning, and the
+    daily-growth loop. Intents map to page types the factory can build."""
+
+    audience: str = ""
+    country: str = "US"
+    seed_keywords: list[str] = Field(default_factory=list)
+    competitors: list[str] = Field(default_factory=list)
+    intents: list[str] = Field(
+        default_factory=lambda: ["review", "comparison", "alternatives", "best", "pricing"]
+    )
+    daily_publish_limit: int = 3
+    min_opportunity_score: float = 0.35
+
+
 class PackManifest(BaseModel):
     slug: str
     version: str
@@ -68,3 +83,4 @@ class PackManifest(BaseModel):
     test_cell: TestCellSpec
     min_facts_per_page: int = 6
     uniqueness_cosine_ceiling: float = 0.85
+    traffic: TrafficSpec = Field(default_factory=TrafficSpec)

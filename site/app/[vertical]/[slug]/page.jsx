@@ -44,6 +44,18 @@ export default async function Page({ params }) {
           </a>
         </p>
       ))}
+      {page.related?.length > 0 && (
+        <section>
+          <h2>Related</h2>
+          <ul className="pagelist">
+            {page.related.map((r) => (
+              <li key={r.slug}>
+                <a href={`/${page.vertical}/${r.slug}/`}>{r.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </article>
   );
 }

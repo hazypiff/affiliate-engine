@@ -119,4 +119,12 @@ def install(pack_dir: str | Path) -> dict:
             "VALUES (%s, %s, %s, %s) ON CONFLICT (tenant_id, slug) DO NOTHING",
             (tenant_id, vertical_id, manifest.test_cell.slug, manifest.test_cell.page_target),
         )
+
+        for kw in manifest.traffic.seed_keywords:
+            conn.execute(
+                "INSERT INTO keyword_seeds (tenant_id, vertical_id, keyword, source) "
+                "VALUES (%s, %s, %s, 'pack') ON CONFLICT (vertical_id, keyword) DO NOTHING",
+                (tenant_id, vertical_id, kw.strip().lower()),
+            )
+            counts["keyword_seeds"] = counts.get("keyword_seeds", 0) + 1
     return counts

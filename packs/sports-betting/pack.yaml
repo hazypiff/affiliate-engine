@@ -24,3 +24,17 @@ test_cell:
   page_target: 30
 min_facts_per_page: 6
 uniqueness_cosine_ceiling: 0.85
+traffic:
+  audience: US sports bettors researching team trends and stats
+  country: US
+  seed_keywords:
+    - nba ats trends
+    - nfl over under trends
+    - team betting trends tonight
+  competitors:
+    - teamrankings.com
+    - covers.com
+    - actionnetwork.com
+  intents: [review, comparison, best]
+  daily_publish_limit: 3
+  min_opportunity_score: 0.35

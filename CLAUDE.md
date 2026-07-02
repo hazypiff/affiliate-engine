@@ -80,9 +80,29 @@ in compliance.json must appear verbatim in emitted pages (emit appends them).
 - pgvector: brute-force cosine is intentional at this scale; don't add ANN
   indexes without need (index builds eat RAM).
 
+## Growth loop (engine/growth/)
+
+`engine daily-growth <pack>` = discovery → planner → factory → links → build →
+sitemap/GSC → metrics → scorer → rules. Its invariants:
+- Discovery is rule-based-first (deterministic, from dataset entities × intents);
+  LLM expansion is best-effort extra and OFF under `--provider mock`. Paid keyword
+  APIs plug in as providers in `engine/growth/discovery.py` returning idea dicts.
+- The factory consumes `content_briefs` by opportunity DESC, capped by the pack's
+  `traffic.daily_publish_limit`. Emitted body = LLM draft + deterministic
+  `facts_table()` — the table is guaranteed-grounded data density; keep it.
+- `find-opportunities` decision logic lives in pure `evaluate_page()`
+  (engine/growth/rules.py) — keep it DB-free so thresholds stay unit-testable.
+- Never use Google's Indexing API for these pages (job postings/livestreams only);
+  sitemaps + GSC submission is the correct channel. GSC/IndexNow calls must stay
+  guarded (skip cleanly without creds, record status in indexing_submissions).
+- Growth e2e is `tests/e2e/growth.py` (runs in `make e2e`): asserts every stage
+  produced work, second run is incremental, and crafted metrics fire the rules.
+
 ## v2 roadmap (documented, unbuilt — pick up here)
 
 Impatient-bandit progressive filter (click→landing→postback Bayesian filter;
-see research report §1.3), SQL dataset adapter (Tier-1 owned-DB grounding), GSC
-API importer (`engine/scorer/importers/gsc_csv.py` docstring), pack-generator
-wizard, per-slot contextual bandits (geo/device), multi-tenant auth/billing.
+see research report §1.3), SQL dataset adapter (Tier-1 owned-DB grounding),
+Google Ads / DataForSEO keyword-volume connectors (stubs in discovery.py),
+query-level GSC data + cluster scaling rule, rewrite executor (consume
+page_opportunities automatically), pack-generator wizard, per-slot contextual
+bandits (geo/device), multi-tenant auth/billing.

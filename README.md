@@ -10,19 +10,23 @@ research agents, 50 claims 3-vote verified). The research findings are implement
 code, not just documented — see [Research basis](#research-basis).
 
 ```
-niche pack (config) ─┐
-                     ▼
-dataset adapter ─► content pipeline ─► GATES ─► static site (Next.js export)
- (CSV / SQL / API)   (LLM gateway:      │        one DOMAIN per vertical
-                      draft role)       │            │ CTA links
-                                        │            ▼
-                     rejected ◄─────────┘        tracker (FastAPI)
-                                                  /go/{slot}  ── Thompson sampling ──► 302 + subid
-                                                  /postback/{network} ◄── S2S conversions
-                                                  expiry job (attribution windows)
-                                                       │
-                                                       ▼
-                                            niche scorer (kill / continue / scale)
+niche pack (config) ──► keyword discovery ──► opportunity scoring ──► content briefs
+      │                  (rules + LLM +          volume × intent ×        │
+      │                   API connectors)        value × fit / diff       ▼
+dataset adapter ─────────────────────────► page factory ─► GATES ─► static site (Next.js export)
+ (CSV / SQL / API)                          (LLM draft +     │       one DOMAIN per vertical
+                                             fact tables)    │        │ internal links, sitemap,
+                                                             │        │ robots, GSC/IndexNow submit
+                                            rejected ◄───────┘        │ CTA links
+                                                                      ▼
+                        GSC metrics ◄─────────────────────────── tracker (FastAPI)
+                             │                                    /go/{slot} ─ Thompson ─► 302+subid
+                             ▼                                    /postback ◄── S2S conversions
+                    improvement rules ──► page work queue         expiry job (attribution windows)
+                    (rewrite_title, expand_page, improve_cta,          │
+                     offer_issue, kill_or_merge)                       ▼
+                             ▲                            niche scorer (kill/continue/scale)
+                             └────────── engine daily-growth runs ALL of this, daily, per pack
 ```
 
 ## Why it's built this way (research → code)
@@ -77,6 +81,29 @@ engine score-niches
 ```
 
 `make verify` = ruff + unit + integration + full e2e. `make demo-real` = live-LLM demo.
+
+## The traffic loop (one command, cron it)
+
+```bash
+engine daily-growth ai-saas        # the whole machine, once per day per pack:
+# discover keywords -> score -> queue briefs -> generate (daily_publish_limit)
+# -> gates -> internal links -> next build -> sitemap/robots -> GSC/IndexNow submit
+# -> GSC metrics import -> expire clicks -> niche scores -> improvement queue -> report
+```
+
+Each stage is also its own command: `discover-keywords`, `import-volumes` (CSV
+volume/difficulty fill until Google Ads/DataForSEO connectors are wired),
+`plan-content`, `generate-briefs`, `build-links`, `publish-index`, `import-gsc`
+(needs `GSC_SA_JSON` service-account; CSV importer works without), `find-opportunities`.
+
+Traffic design notes from the research: sitemaps are the correct indexing channel —
+Google's Indexing API only covers job postings/livestreams and is deliberately not
+used; internal links are emitted as crawlable `<a>` in the static HTML; keyword ideas
+come free and deterministic from your own dataset (entity × intent) before any paid
+API is involved. Improvement rules turn GSC data into a work queue: high impressions +
+low CTR → rewrite title; position 8–20 → expand page; SERP clicks but no CTA clicks →
+improve CTA; CTA clicks but no conversions → offer issue; 60+ days with zero
+impressions → kill or merge.
 
 ## Adding a niche (no code)
 

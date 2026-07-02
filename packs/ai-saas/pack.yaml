@@ -22,3 +22,18 @@ test_cell:
   page_target: 30
 min_facts_per_page: 6
 uniqueness_cosine_ceiling: 0.85
+traffic:
+  audience: small business owners and creators choosing AI/SaaS tools
+  country: US
+  seed_keywords:
+    - ai email marketing tools
+    - best ai voice generator
+    - elevenlabs alternatives
+    - convertkit vs getresponse
+  competitors:
+    - zapier.com
+    - g2.com
+    - capterra.com
+  intents: [review, comparison, alternatives, best, pricing]
+  daily_publish_limit: 3
+  min_opportunity_score: 0.35

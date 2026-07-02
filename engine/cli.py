@@ -61,6 +61,83 @@ def publish(skip_install: bool = typer.Option(False, help="skip npm install")):
     typer.echo(f"built: {sum(1 for _ in out.rglob('*.html'))} html files in {out}")
 
 
+@app.command("discover-keywords")
+def discover_keywords_cmd(pack: str, provider: str = typer.Option(None)):
+    """Expand keyword ideas from the pack's entities, seeds, and (non-mock) the LLM."""
+    from engine.growth.discovery import discover_keywords
+
+    typer.echo(json.dumps(discover_keywords(pack, provider_override=provider)))
+
+
+@app.command("import-volumes")
+def import_volumes_cmd(file: str):
+    """Fill search_volume/difficulty from CSV (keyword,search_volume[,difficulty])."""
+    from engine.growth.discovery import import_volumes
+
+    typer.echo(json.dumps({"updated": import_volumes(file)}))
+
+
+@app.command("plan-content")
+def plan_content_cmd(pack: str):
+    """Score keyword ideas and queue content briefs above the pack threshold."""
+    from engine.growth.planner import plan_content
+
+    typer.echo(json.dumps(plan_content(pack)))
+
+
+@app.command("generate-briefs")
+def generate_briefs_cmd(pack: str, limit: int = typer.Option(3),
+                        provider: str = typer.Option(None)):
+    """Generate pages from queued content briefs (highest opportunity first)."""
+    from engine.growth.factory import generate_from_briefs
+
+    for r in generate_from_briefs(pack, limit=limit, provider_override=provider):
+        gate_summary = {k: v["passed"] for k, v in r.get("gates", {}).items()}
+        typer.echo(json.dumps({"slug": r["slug"], "status": r["status"], **gate_summary}))
+
+
+@app.command("build-links")
+def build_links_cmd(pack: str):
+    """Build internal topic-cluster links and inject them into emitted pages."""
+    from engine.growth.links import build_links
+
+    typer.echo(json.dumps(build_links(pack)))
+
+
+@app.command("publish-index")
+def publish_index_cmd(pack: str):
+    """Generate sitemap + robots.txt; submit to GSC/IndexNow when creds are set."""
+    from engine.growth.indexing import publish_index
+
+    typer.echo(json.dumps(publish_index(pack)))
+
+
+@app.command("import-gsc")
+def import_gsc_cmd(pack: str, days: int = typer.Option(7)):
+    """Import Search Console metrics via API (needs GSC_SA_JSON)."""
+    from engine.growth.gsc import import_gsc
+
+    typer.echo(json.dumps(import_gsc(pack, days=days)))
+
+
+@app.command("find-opportunities")
+def find_opportunities_cmd(pack: str):
+    """Apply improvement rules to real traffic data; queue page work."""
+    from engine.growth.rules import find_opportunities
+
+    typer.echo(json.dumps(find_opportunities(pack), indent=1))
+
+
+@app.command("daily-growth")
+def daily_growth_cmd(pack: str, provider: str = typer.Option(None),
+                     skip_publish: bool = typer.Option(False, help="skip next build")):
+    """Run the full daily traffic loop for a pack (cron this)."""
+    from engine.growth.daily import daily_growth
+
+    typer.echo(json.dumps(daily_growth(pack, provider_override=provider,
+                                       skip_publish=skip_publish), indent=1))
+
+
 @app.command("gateway-check")
 def gateway_check():
     """Hit the live chat endpoint and probe the embedding endpoint."""

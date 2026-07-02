@@ -14,6 +14,7 @@ test:
 
 e2e:
 	$(PY)/python tests/e2e/smoke.py
+	$(PY)/python tests/e2e/growth.py
 
 verify: lint test e2e
 	@echo "VERIFY PASSED"
