@@ -1,0 +1,11 @@
+team_slug,name,league,games_sampled,ats_cover_pct,over_pct,avg_total_points,avg_margin,home_ats_pct,last10_ats
+nba-bos,Boston Celtics,NBA,82,54.9,48.8,224.6,7.2,58.5,6-4
+nba-den,Denver Nuggets,NBA,82,52.4,51.2,226.1,4.8,61.0,5-5
+nba-okc,Oklahoma City Thunder,NBA,82,58.5,46.3,221.9,8.1,56.1,7-3
+nba-nyk,New York Knicks,NBA,82,51.2,53.7,223.4,3.9,53.7,4-6
+nhl-fla,Florida Panthers,NHL,82,53.7,51.2,6.1,0.8,56.1,6-4
+nhl-edm,Edmonton Oilers,NHL,82,52.4,56.1,6.4,0.6,53.7,5-5
+mlb-lad,Los Angeles Dodgers,MLB,162,54.3,49.4,8.9,1.4,56.8,7-3
+mlb-nyy,New York Yankees,MLB,162,51.9,50.6,8.7,1.1,54.3,5-5
+nfl-kc,Kansas City Chiefs,NFL,17,52.9,41.2,44.8,5.6,55.6,6-4
+nfl-det,Detroit Lions,NFL,17,64.7,58.8,51.2,7.8,62.5,7-3

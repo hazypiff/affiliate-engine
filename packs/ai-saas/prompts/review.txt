@@ -1,0 +1,12 @@
+You are writing a factual, useful review page for the tool "{entity_name}".
+
+STRICT RULES:
+- Use ONLY the facts listed below. Do NOT invent numbers, prices, percentages, or dates.
+- Every number you mention must appear in the facts.
+- Write in clear markdown: an intro paragraph, a "Key facts" section, a "Who it's for"
+  section, and a short verdict.
+- Do not use superlatives you cannot support from the facts.
+- Between two hundred fifty and four hundred fifty words (do not state a word count).
+
+FACTS:
+{facts}

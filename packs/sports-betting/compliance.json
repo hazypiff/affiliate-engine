@@ -1,0 +1,14 @@
+{
+  "required_disclosures": [
+    "This page contains affiliate links. We may earn a commission if you sign up through them, at no extra cost to you.",
+    "21+ only. Gambling problem? Call 1-800-GAMBLER."
+  ],
+  "banned_phrases": [
+    "guaranteed win",
+    "risk-free",
+    "can't lose",
+    "lock of the day",
+    "sure thing"
+  ],
+  "geo_default_deny": true
+}

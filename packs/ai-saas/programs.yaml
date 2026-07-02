@@ -1,0 +1,58 @@
+# Commission rates verified against vendor pages July 2026 (research report §2.2).
+# payout_amount = estimated $ value of one conversion (bandit's payout prior) — refine with real data.
+# url_template links are PLACEHOLDERS until network signup; {click_id} is substituted at redirect.
+- slug: kit
+  name: Kit (ConvertKit)
+  network: partnerstack
+  payout_model: recurring
+  cookie_window_days: 90
+  payout: {note: "50% recurring first 12 months, then 10-20%"}
+  offers:
+    - slug: kit-main
+      name: Kit signup
+      url_template: "https://example-partners.test/kit?subid={click_id}"
+      payout_amount: 90.00
+- slug: getresponse
+  name: GetResponse
+  network: direct
+  payout_model: recurring
+  cookie_window_days: 30
+  payout: {note: "40-60% recurring for 12 months"}
+  offers:
+    - slug: getresponse-main
+      name: GetResponse signup
+      url_template: "https://example-partners.test/getresponse?subid={click_id}"
+      payout_amount: 75.00
+- slug: elevenlabs
+  name: ElevenLabs
+  network: partnerstack
+  payout_model: revshare
+  cookie_window_days: 30
+  payout: {note: "22% first 12 months (11% Business plan)"}
+  offers:
+    - slug: elevenlabs-main
+      name: ElevenLabs signup
+      url_template: "https://example-partners.test/elevenlabs?subid={click_id}"
+      payout_amount: 29.00
+- slug: surfer
+  name: Surfer SEO
+  network: direct
+  payout_model: cpa
+  cookie_window_days: 60
+  payout: {note: "one-time CPA 75/100/125% of first monthly payment by referral tier"}
+  offers:
+    - slug: surfer-main
+      name: Surfer signup
+      url_template: "https://example-partners.test/surfer?subid={click_id}"
+      payout_amount: 66.75
+- slug: instantly
+  name: Instantly
+  network: direct
+  payout_model: recurring
+  cookie_window_days: 30
+  payout: {note: "20% lifetime entry tier, up to 40% at 76+ referrals"}
+  offers:
+    - slug: instantly-main
+      name: Instantly signup
+      url_template: "https://example-partners.test/instantly?subid={click_id}"
+      payout_amount: 22.00

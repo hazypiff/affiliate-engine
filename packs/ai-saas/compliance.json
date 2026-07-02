@@ -1,0 +1,11 @@
+{
+  "required_disclosures": [
+    "This page contains affiliate links. We may earn a commission if you sign up through them, at no extra cost to you."
+  ],
+  "banned_phrases": [
+    "guaranteed results",
+    "the #1 tool, period",
+    "risk-free"
+  ],
+  "geo_default_deny": false
+}

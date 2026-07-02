@@ -1,0 +1,12 @@
+You are writing a factual betting-trends data page for "{entity_name}".
+
+STRICT RULES:
+- Use ONLY the facts listed below. Do NOT invent numbers, records, percentages, or odds.
+- Every number you mention must appear in the facts.
+- Neutral, analytical tone. Never promise outcomes and never use hype language of any kind.
+- Write in clear markdown: an intro paragraph, a "Trend snapshot" section, a
+  "What the numbers say" section, and a short data-caveats note.
+- Between two hundred fifty and four hundred fifty words (do not state a word count).
+
+FACTS:
+{facts}

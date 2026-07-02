@@ -1,0 +1,40 @@
+# CPA-first entry per research report §2.1: NJ ($0 vendor reg), MI ($200), CO ($350)
+# before any revshare deal (which triggers $2k-$11.2k licensing).
+# Operators manually approve new affiliates — these are mocknet placeholders until
+# network/aggregator approval; payout_amount reflects typical sportsbook CPA scale.
+- slug: book-alpha
+  name: Sportsbook Alpha (placeholder)
+  network: mocknet
+  payout_model: cpa
+  cookie_window_days: 30
+  payout: {note: "flat CPA per first-time depositor"}
+  offers:
+    - slug: book-alpha-njmico
+      name: Book Alpha welcome offer
+      url_template: "https://example-books.test/alpha?subid={click_id}"
+      payout_amount: 250.00
+      geo_allow: [NJ, MI, CO]
+- slug: book-bravo
+  name: Sportsbook Bravo (placeholder)
+  network: mocknet
+  payout_model: cpa
+  cookie_window_days: 30
+  payout: {note: "flat CPA per first-time depositor"}
+  offers:
+    - slug: book-bravo-njmico
+      name: Book Bravo welcome offer
+      url_template: "https://example-books.test/bravo?subid={click_id}"
+      payout_amount: 300.00
+      geo_allow: [NJ, MI, CO]
+- slug: book-charlie
+  name: Sportsbook Charlie (placeholder)
+  network: mocknet
+  payout_model: cpa
+  cookie_window_days: 30
+  payout: {note: "flat CPA per first-time depositor"}
+  offers:
+    - slug: book-charlie-nj
+      name: Book Charlie welcome offer
+      url_template: "https://example-books.test/charlie?subid={click_id}"
+      payout_amount: 200.00
+      geo_allow: [NJ]

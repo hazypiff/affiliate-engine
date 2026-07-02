@@ -1,0 +1,24 @@
+slug: ai-saas
+version: "1.0.0"
+name: AI & SaaS Tools
+vertical:
+  slug: ai-saas
+  name: AI & SaaS Tools
+  domain: aitoolfacts.example.com   # placeholder — set the real domain before deploy
+dataset:
+  slug: ai-tools
+  adapter: csv
+  file: data/ai_tools.csv
+  entity_key: tool_slug
+page_types:
+  - type: review
+    prompt: prompts/review.txt
+    slots: [ai-hero-cta]
+slots:
+  - slug: ai-hero-cta
+    description: Primary CTA slot on ai-saas review pages
+test_cell:
+  slug: ai-saas-cell-1
+  page_target: 30
+min_facts_per_page: 6
+uniqueness_cosine_ceiling: 0.85
